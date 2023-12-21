@@ -7,6 +7,8 @@
 #ifndef _LIB_XI
 #define _LIB_XI
 
+// #define _XI_MPI  // Use this flag to enable MPI (In CC Flags)
+
 // Return Code
 typedef enum {
     _XI_RETURN_OK = 0,
@@ -39,6 +41,12 @@ typedef enum {
     _XI_CONTROL_STOP,
     _XI_CONTROL_WAIT
 } xiControlCode;
+
+#ifdef _XI_MPI
+xiReturnCode xiMPIWait();
+void xiMPIStop();
+void xiMPIInit();
+#endif
 
 // ====== Vector Functions ======
 // Result=func.(Result) for vector;

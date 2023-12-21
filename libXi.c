@@ -2,6 +2,30 @@
 #include <math.h>
 #include <stdlib.h>
 
+#ifdef _XI_MPI
+#include <mpi.h>
+int _xiMPI_PID = 0, _xiMPI_RankSize = 0;
+unsigned int _xiMPI_isWait = 0;
+
+xiReturnCode xiMPIWait(){
+    int returnCode = 0;
+    if(_xiMPI_PID == 0 && _xiMPI_isWait != 0) return _XI_RETURN_OK;
+    returnCode = MPI_Barrier(MPI_COMM_WORLD);
+    if(returnCode != MPI_SUCCESS) return _XI_RETURN_MPI_ERROR;
+    return _XI_RETURN_OK;
+}
+
+void xiMPIStop(){
+    MPI_Finalize();
+}
+
+void xiMPIInit(){
+    MPI_Init(NULL, NULL);
+    MPI_Comm_rank(MPI_COMM_WORLD, &_xiMPI_PID);
+    MPI_Comm_size(MPI_COMM_WORLD, &_xiMPI_RankSize);
+}
+#endif
+
 // ====== Vector Functions ======
 
 void xiFuncVector(long double (*func)(long double), xiVector* result){
